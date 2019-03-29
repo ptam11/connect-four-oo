@@ -6,12 +6,15 @@
  */
 
 class Game {
-  constructor(height, width){
+  constructor(height, width, playerObj){
     this.height = height;
     this.width = width;
     this.board = [];
-    this.currPlayer = 1;
+    this.playerObj = playerObj;
+    this.currPlayer = playerObj["p1"]["playerID"];
     this.playGame = true;
+
+    
 
     this.makeBoard();
     this.makeHtmlBoard();
@@ -84,7 +87,8 @@ class Game {
   placeInTable(y, x) {
     const piece = document.createElement('div');
     piece.classList.add('piece');
-    piece.classList.add(`p${this.currPlayer}`);
+    piece.style.backgroundColor = this.playerObj[`p${this.currPlayer}`]["color"];
+    // piece.classList.add(`p${this.currPlayer}`);
     piece.style.top = -50 * (y + 2);
 
     const spot = document.getElementById(`${y}-${x}`);
@@ -165,7 +169,13 @@ class Game {
         }
       }
     }
-     
+
+class Player {
+  constructor(playerID, color){
+    this.playerID = playerID;
+    this.color = color;
+  }
+}    
 
 
 
@@ -176,7 +186,15 @@ startButton.addEventListener("click", function() {
   while(tableBoard.firstChild){
     tableBoard.firstChild.remove();
   }
-  new Game(6, 7);
+  let p1Input = document.getElementById("p1").value;
+  let p2Input = document.getElementById("p2").value;
+
+  let p1 = new Player(1, p1Input);
+  let p2 = new Player(2, p2Input);
+
+  let playerObj = {p1, p2};
+  console.log(playerObj.p1);
+  new Game(6, 7, playerObj);
 });
    
 
