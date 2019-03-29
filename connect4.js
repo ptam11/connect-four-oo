@@ -5,14 +5,13 @@
  * board fills (tie)
  */
 
-//jdslakjflkasjf;la
-
 class Game {
   constructor(height, width){
     this.height = height;
     this.width = width;
     this.board = [];
     this.currPlayer = 1;
+    this.playGame = true;
 
     this.makeBoard();
     this.makeHtmlBoard();
@@ -101,31 +100,33 @@ class Game {
   /** handleClick: handle click of column top to play piece */
 
   handleClick(evt) {
-  // get x from ID of clicked cell
-  const x = +evt.target.id;
+    if(this.playGame){
+      // get x from ID of clicked cell
+      const x = +evt.target.id;
 
-  // get next spot in column (if none, ignore click)
-  const y = this.findSpotForCol(x);
-  if (y === null) {
-    return;
-  }
+      // get next spot in column (if none, ignore click)
+      const y = this.findSpotForCol(x);
+      if (y === null) {
+        return;
+      }
 
-  // place piece in board and add to HTML table
-  this.board[y][x] = this.currPlayer;
-  this.placeInTable(y, x);
+      // place piece in board and add to HTML table
+      this.board[y][x] = this.currPlayer;
+      this.placeInTable(y, x);
 
-  // check for tie
-  if (this.board.every(row => row.every(cell => cell))) {
-    return this.endGame('Tie!');
-  }
+      // check for tie
+      if (this.board.every(row => row.every(cell => cell))) {
+        return this.endGame('Tie!');
+      }
 
-  // check for win
-  if (this.checkForWin()) {
-    return this.endGame(`Player ${this.currPlayer} won!`);
-  }
+      // check for win
+      if (this.checkForWin()) {
+        return this.endGame(`Player ${this.currPlayer} won!`);
+      }
 
-  // switch players
-  this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+      // switch players
+      this.currPlayer = this.currPlayer === 1 ? 2 : 1;
+    }
   }
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
 
@@ -157,18 +158,15 @@ class Game {
 
             // find winner (only checking each win-possibility as needed)
             if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
+              this.playGame = false;
               return true;
             }
           }
         }
       }
     }
-    
-// clickButton(){
-//   let startButton = document.getElementById("start-button");
-//   startButton.addEventListener("click", this.makeBoard());
-//   startButton.addEventListener("click", this.makeHTMLBoard());
-// }    
+     
+
 
 
 let startButton = document.getElementById("start-button");
